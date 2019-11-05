@@ -4,7 +4,7 @@ class CreateTimespans < ActiveRecord::Migration[5.2]
       t.date :date
       t.decimal :hours_worked
       t.integer :report_id
-      t.references :employees, foreign_key: true
+      t.references :employee, foreign_key: true
 
       t.timestamps
     end

@@ -57,7 +57,7 @@ class App extends React.Component {
       method: 'post',
       header: { 'Content-Type': 'application/json' },
       body: data
-    }).then((res) => {
+    }).then((res) => {return res.json()
     }).then((data)=>{console.log(data)})
   }
   handleFormSubmit(id, jobgroup) {

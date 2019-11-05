@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_05_013557) do
+ActiveRecord::Schema.define(version: 2019_11_05_133245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,11 +25,11 @@ ActiveRecord::Schema.define(version: 2019_11_05_013557) do
     t.date "date"
     t.decimal "hours_worked"
     t.integer "report_id"
-    t.bigint "employees_id"
+    t.bigint "employee_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["employees_id"], name: "index_timespans_on_employees_id"
+    t.index ["employee_id"], name: "index_timespans_on_employee_id"
   end
 
-  add_foreign_key "timespans", "employees", column: "employees_id"
+  add_foreign_key "timespans", "employees"
 end
