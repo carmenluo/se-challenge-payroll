@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pay_period: MyString
+  amount_paid: 9.99
+  report_id: 1
+  employee: one
+
+two:
+  pay_period: MyString
+  amount_paid: 9.99
+  report_id: 1
+  employee: two
