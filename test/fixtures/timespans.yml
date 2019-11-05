@@ -1,11 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  date: 2019-11-01
-  hours: 9.99
-  employee: one
+  date: 2019-11-04
+  hours_worked: 9.99
+  report_id: 1
+  employees: one
 
 two:
-  date: 2019-11-01
-  hours: 9.99
-  employee: two
+  date: 2019-11-04
+  hours_worked: 9.99
+  report_id: 1
+  employees: two

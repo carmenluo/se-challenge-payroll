@@ -1,3 +1,3 @@
 class Timespan < ApplicationRecord
-  belongs_to :employee
+  belongs_to :employees
 end
