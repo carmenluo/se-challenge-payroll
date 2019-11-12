@@ -3,6 +3,9 @@ require 'date'
 require 'active_support/all'
 class PayrollController < ApplicationController
   def index
+    # Report.destroy_all
+    # Timespan.destroy_all
+    # Employee.destroy_all
     render json: Employee.all
   end
   def show
@@ -12,64 +15,50 @@ class PayrollController < ApplicationController
     
   end
   def create
-    Timespan.destroy_all
-    Report.destroy_all
-    Employee.destroy_all
     last_index = params["reportID"].to_i
     employees_list = []
-    puts last_index
-    CSV.foreach(params["file"].tempfile,headers: true) do |row|
+    CSV.foreach(params["file"].tempfile,headers: true, skip_blanks: true) do |row|
       # parse CSV file except for the last row
       if row[0] != "report id"
+        # check if this employee id exists or not
         if !Employee.exists?(row[2])
         employees =  Employee.create(id: row[2], job_group: row[3])
         employees_list.push(row[2])
         end
         @employee = Employee.find(row[2])
+        # store raw data into database with date, hours_worked, report_id and associate with Employee model
         @timespan = @employee.timespans.create(date: row[0], hours_worked: row[1], report_id: last_index )
+        add_report_item(@employee, @timespan)
       end
     end
-    generate_report(last_index, employees_list)
-    render json: Timespan.all
-    # employee = Employee.create(employee_params)
-    # render json: employee
+    render json: Report.where(report_id: last_index)
   end
 
-  def generate_report(report_id, employees_list)
-    
-    @records = Timespan.where(report_id: report_id)
-    employees_list.each do |employee|
-      @employee = Employee.find(employee)
-      @timespan = @employee.timespans.where(report_id: report_id)
-      @timespan.each do |timespan|
-        amount_paid = 0
-      case @employee.job_group
-        time_period = [[]]
-        current_day = timespan.date.day
-      when "A"
-        case current_day
-        when 1..15
-          amount_paid += timespan.hours_worked * 30
-
-          time_period.push([current_day.beginning_of_month, amount_paid])
-        when 16..31
-          amount_paid += timespan.hours_worked * 30
-        end
-      when "B"
-        case timespan.date.day
-        when 1..15
-          amount_paid += timespan.hours_worked * 20
-        when 16..31
-          amount_paid += timespan.hours_worked * 20
-        end
-      end
-      @report = @employee.reports.create(amount_paid: amount_paid, report_id: report_id )
-      amount_paid=0
-      end
+  def add_report_item(employee, timespan)
+    amount_paid = 0
+    case employee.job_group
+    when "A"
+      amount_paid += timespan.hours_worked * 30
+    when "B"
+      amount_paid += timespan.hours_worked * 20
     end
+    current_date = timespan.date
+    case current_date.day
+    when 1..15
+      pay_start_date = current_date.beginning_of_month
+      pay_end_date = Date.new(current_date.year, current_date.month, 15)
+    when 16..31
+      pay_start_date = Date.new(current_date.year, current_date.month, 16)
+      pay_end_date = current_date.end_of_month 
+    end
+
+    report = Report.where(employee_id: employee.id, pay_start_date:  pay_start_date, pay_end_date: pay_end_date,report_id: timespan.report_id ).first_or_create
+    report.amount_paid ||= 0
+    report.amount_paid += amount_paid
+    report.save!
   end
-  private
+end
   # def employee_params
   #   params.require(:employee).permit(:id, :job_group)
-  # end
-end
+
+

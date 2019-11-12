@@ -10,10 +10,11 @@ const AllRows = (props) => {
     <thead>
       <tr>
         <th>#</th>
-        <th>date</th>
-        <th>hours worked</th>
         <th>employees id</th>
         <th>job group</th>
+        <th>date</th>
+        <th>hours worked</th>
+
       </tr>
     </thead>
     <tbody>{employees}</tbody>

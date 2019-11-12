@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_05_215310) do
+ActiveRecord::Schema.define(version: 2019_11_08_145527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 2019_11_05_215310) do
     t.date "pay_start_date"
     t.date "pay_end_date"
     t.index ["employee_id"], name: "index_reports_on_employee_id"
+    t.index ["pay_start_date", "pay_end_date", "amount_paid", "report_id"], name: "report_unique_index", unique: true
   end
 
   create_table "timespans", force: :cascade do |t|
